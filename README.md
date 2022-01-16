@@ -1,6 +1,6 @@
 # TfDataStreamer
 
-This provides you with a streamer of data, which you can listen to.
+This provides you with a base for streamer of data, which you can listen to.
 Useful when you want to listen to the changes in certain data,
 coming from a source e.g., API, Files, or from somewhere within the code and has probability of changes with time,
 or requires reloading after certain events.
@@ -26,33 +26,61 @@ dependencies:
 Import the package in your dart file
 
 ```dart
-import 'package:tf_photo_avatar/tf_photo_avatar.dart';
+import 'package:tf_data_streamer/tf_data_streamer.dart';
 ```
 
-To create a photo avatar with image caching support.
+To implement the data streamer base for custom data events, simply extend the TfDataStreamer with template argument matching to the type of data you want to stream.
+See example for more detailed use.
 
 ```dart
-     TfPhotoAvatar.cached(
-        imageUrl: 'www.images.com/img1.png',
-        onErrorImageAssetPath: 'assets/images/error.png',
-        onLoadingImageAssetPath: 'assets/images/loading.png',
-        radius: 90,
-        memoryCacheHeight: 100,
-        memoryCacheWidth: 100,
-        imageFit: BoxFit.fill,
-    ),
+    class AuthListener extends TfDataStreamer<AuthStatus> {
+        // TODO: Implement the below method
+        @override
+        void reload() {
+            // add your reload functionality here.
+            // this method is expected to revalidate and refresh the event.
+        }
+    }
 ```
 
-To create a photo avatar without image caching support.
+Instantiate and initialize the Data Streamer (AuthListener in above case) before use.
 
 ```dart
-    TfPhotoAvatar.noncached(
-        imageUrl: 'www.images.com/img1.png',
-        onLoadingImageAssetPath: 'assets/images/loading.png',
-        onErrorImageAssetPath: 'assets/images/error.png',
-        radius: 90,
-        imageCacheHeight: 100,
-        imageCacheWidth: 100,
-        imageFit: BoxFit.fill,
-    ),
+    final authStatusListener = AuthListener();
+    // the streamer can be made broadcast while initializing if multiple listeners would be there.
+    authStatusListener.init(broadcast: true);
+```
+
+Now you are good to operate and stream data. A good control over it.
+
+```dart
+
+    // Push a new data update to the stream.
+    authStatusListener.addData(AuthStatus.signedIn);
+
+    // Push a error to the stream.
+    authStatusListener.addError(Exception('error'));
+
+    // Get access to data stream
+    final datastream = authStatusListener.stream;
+
+    // To get if stream is closed for data events
+    print(authStatusListener.isClosed);
+
+    // To get if stream is open for data events
+    print(authStatusListener.isOpen);
+
+    // To get if data-stream is broadcast stream or not
+    print(authStatusListener.isBroadcast);
+
+    // Listen to the events and errors from data streamer.
+    authStatusListener.stream.listen((event) {
+        print('Auth Status Changed to $event');
+    }, onError: (error) {
+        print('Failed to get latest Auth Status.');
+    });
+
+    // Dispose the data-streamer after use.
+    authStatusListener.dispose();
+
 ```
