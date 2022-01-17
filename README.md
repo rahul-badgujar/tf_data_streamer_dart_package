@@ -33,54 +33,54 @@ To implement the data streamer base for custom data events, simply extend the Tf
 See example for more detailed use.
 
 ```dart
-    class AuthListener extends TfDataStreamer<AuthStatus> {
-        // TODO: Implement the below method
-        @override
-        void reload() {
-            // add your reload functionality here.
-            // this method is expected to revalidate and refresh the event.
-        }
+class AuthListener extends TfDataStreamer<AuthStatus> {
+    // TODO: Implement the below method
+    @override
+    void reload() {
+        // add your reload functionality here.
+        // this method is expected to revalidate and refresh the event.
     }
+}
 ```
 
 Instantiate and initialize the Data Streamer (AuthListener in above case) before use.
 
 ```dart
-    final authStatusDataStreamer = AuthListener();
-    // the streamer can be made broadcast while initializing if multiple listeners would be there.
-    authStatusDataStreamer.init(broadcast: true);
+final authStatusDataStreamer = AuthListener();
+// the streamer can be made broadcast while initializing if multiple listeners would be there.
+authStatusDataStreamer.init(broadcast: true);
 ```
 
 Now you are good to operate and stream data. A good control over it.
 
 ```dart
 
-    // Push a new data update to the stream.
-    authStatusDataStreamer.addData(AuthStatus.signedIn);
+// Push a new data update to the stream.
+authStatusDataStreamer.addData(AuthStatus.signedIn);
 
-    // Push a error to the stream.
-    authStatusDataStreamer.addError(Exception('error'));
+// Push a error to the stream.
+authStatusDataStreamer.addError(Exception('error'));
 
-    // Get access to data stream
-    final datastream = authStatusDataStreamer.stream;
+// Get access to data stream
+final datastream = authStatusDataStreamer.stream;
 
-    // To get if stream is closed for data events
-    print(authStatusDataStreamer.isClosed);
+// To get if stream is closed for data events
+print(authStatusDataStreamer.isClosed);
 
-    // To get if stream is open for data events
-    print(authStatusDataStreamer.isOpen);
+// To get if stream is open for data events
+print(authStatusDataStreamer.isOpen);
 
-    // To get if data-stream is broadcast stream or not
-    print(authStatusDataStreamer.isBroadcast);
+// To get if data-stream is broadcast stream or not
+print(authStatusDataStreamer.isBroadcast);
 
-    // Listen to the events and errors from data streamer.
-    authStatusDataStreamer.stream.listen((event) {
-        print('Auth Status Changed to $event');
-    }, onError: (error) {
-        print('Failed to get latest Auth Status.');
-    });
+// Listen to the events and errors from data streamer.
+authStatusDataStreamer.stream.listen((event) {
+    print('Auth Status Changed to $event');
+}, onError: (error) {
+    print('Failed to get latest Auth Status.');
+});
 
-    // Dispose the data-streamer after use.
-    authStatusDataStreamer.dispose();
+// Dispose the data-streamer after use.
+authStatusDataStreamer.dispose();
 
 ```
