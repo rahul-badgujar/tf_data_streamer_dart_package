@@ -46,9 +46,9 @@ See example for more detailed use.
 Instantiate and initialize the Data Streamer (AuthListener in above case) before use.
 
 ```dart
-    final authStatusListener = AuthListener();
+    final authStatusDataStreamer = AuthListener();
     // the streamer can be made broadcast while initializing if multiple listeners would be there.
-    authStatusListener.init(broadcast: true);
+    authStatusDataStreamer.init(broadcast: true);
 ```
 
 Now you are good to operate and stream data. A good control over it.
@@ -56,31 +56,31 @@ Now you are good to operate and stream data. A good control over it.
 ```dart
 
     // Push a new data update to the stream.
-    authStatusListener.addData(AuthStatus.signedIn);
+    authStatusDataStreamer.addData(AuthStatus.signedIn);
 
     // Push a error to the stream.
-    authStatusListener.addError(Exception('error'));
+    authStatusDataStreamer.addError(Exception('error'));
 
     // Get access to data stream
-    final datastream = authStatusListener.stream;
+    final datastream = authStatusDataStreamer.stream;
 
     // To get if stream is closed for data events
-    print(authStatusListener.isClosed);
+    print(authStatusDataStreamer.isClosed);
 
     // To get if stream is open for data events
-    print(authStatusListener.isOpen);
+    print(authStatusDataStreamer.isOpen);
 
     // To get if data-stream is broadcast stream or not
-    print(authStatusListener.isBroadcast);
+    print(authStatusDataStreamer.isBroadcast);
 
     // Listen to the events and errors from data streamer.
-    authStatusListener.stream.listen((event) {
+    authStatusDataStreamer.stream.listen((event) {
         print('Auth Status Changed to $event');
     }, onError: (error) {
         print('Failed to get latest Auth Status.');
     });
 
     // Dispose the data-streamer after use.
-    authStatusListener.dispose();
+    authStatusDataStreamer.dispose();
 
 ```

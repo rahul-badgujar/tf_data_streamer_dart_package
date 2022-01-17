@@ -51,33 +51,33 @@ class AuthListener extends TfDataStreamer<AuthStatus> {
 
 void main() {
   // Instantiate and initialize the AuthListener
-  final authStatusListener = AuthListener();
-  authStatusListener.init(broadcast: true);
+  final authStatusDataStreamer = AuthListener();
+  authStatusDataStreamer.init(broadcast: true);
 
   // Listen to the stream of data update events
-  authStatusListener.stream.listen((event) {
+  authStatusDataStreamer.stream.listen((event) {
     print('Auth Status Changed to $event');
   }, onError: (error) {
     print('Failed to get latest Auth Status.');
   });
 
-  authStatusListener.addData(AuthStatus.signedIn);
+  authStatusDataStreamer.addData(AuthStatus.signedIn);
 
   // For the instance, the server will be pinged every 3 seconds for latest auth status.
   // We can add data, add error, or reload() from anywhere in the code, and listeners will listen to it.
   Timer.periodic(Duration(seconds: 3), (timer) {
-    authStatusListener.reload();
+    authStatusDataStreamer.reload();
   });
 
   // To get if stream is closed for data events
-  print(authStatusListener.isClosed);
+  print(authStatusDataStreamer.isClosed);
 
   // To get if stream is open for data events
-  print(authStatusListener.isOpen);
+  print(authStatusDataStreamer.isOpen);
 
   // To get if data-stream is broadcast stream or not
-  print(authStatusListener.isBroadcast);
+  print(authStatusDataStreamer.isBroadcast);
 
   // Dispose the data-streamer after use.
-  authStatusListener.dispose();
+  authStatusDataStreamer.dispose();
 }
